@@ -1,0 +1,146 @@
+interface QuackBehavior {
+	public void quack();	
+}
+
+class Quack implements QuackBehavior {
+	public void quack() {
+		System.out.println("꽥꽥");
+	}
+}
+
+class Squack implements QuackBehavior {
+	public void quack() {
+		System.out.println("삑삑");
+	}
+}
+
+class MuteQuack implements QuackBehavior {
+	public void quack() {
+		System.out.println("조용");
+	}
+}
+
+interface FlyBehavior {
+	public void fly();
+}
+
+class FlyWithWings implements FlyBehavior {
+	public void fly() {
+		System.out.println("훨 훨 날아갑니다");
+	}
+}
+
+class FlyNoWay implements FlyBehavior {
+	public void fly() {
+		System.out.println("저는 못 날아요");
+	}
+}
+
+class FlyRocketPowered implements FlyBehavior {
+	public void fly() {
+		System.out.println("쓔슈 슝");
+	}	
+}
+  
+abstract class Duck {
+	
+	QuackBehavior quackBehavior;
+	FlyBehavior flyBehavior;
+	
+	void swim() {
+		System.out.println("둥 둥 두둥실");
+	}
+	
+	void performQuack() {
+		quackBehavior.quack();
+	}
+	
+	void performFly() {
+		flyBehavior.fly();
+	}
+	
+	void setQuackBehavior(QuackBehavior quackBehavior) {
+		this.quackBehavior = quackBehavior;
+	}
+	
+	void setFlyBehavior(FlyBehavior flyBehavior) {
+		this.flyBehavior = flyBehavior;
+	}
+	
+	void shotByGun() {
+		setFlyBehavior(new FlyNoWay());
+	}
+	
+	abstract void display();
+	
+}
+
+class MallardDuck extends Duck {
+	
+	MallardDuck() {
+		quackBehavior = new Quack();
+		flyBehavior = new FlyWithWings();
+	}
+	
+	void display() {
+		System.out.println("나는 청둥오리~");
+	}
+	
+}
+
+class RubberDuck extends Duck {
+	
+	RubberDuck() {
+		quackBehavior = new Squack();
+		flyBehavior = new FlyNoWay();
+	}
+	
+	void display() {
+		System.out.println("나는 고무오리~");
+	}
+	
+}
+
+class DecoyDuck extends Duck {
+	
+	DecoyDuck() {
+		quackBehavior = new MuteQuack();
+		flyBehavior = new FlyNoWay();
+	}
+	
+	void display() {
+		System.out.println("나는 나무오리~");
+	}
+	
+}
+
+public class MiniDuckSimulator {
+
+	public static void main(String[] args) {
+		
+		Duck mallard = new MallardDuck(); //upcasting
+		Duck rubber = new RubberDuck();
+		Duck decoy = new DecoyDuck();
+		
+		mallard.display();
+		mallard.performQuack();
+		mallard.performFly();
+		mallard.shotByGun();
+		mallard.performFly();
+		mallard.swim();
+		
+		rubber.display();
+		rubber.performQuack();
+		rubber.performFly();
+		rubber.swim();
+		
+		decoy.display();
+		decoy.performQuack();
+		decoy.performFly();
+		decoy.swim();
+		decoy.setFlyBehavior(new FlyRocketPowered());
+		decoy.performFly();
+		
+	}
+
+}
