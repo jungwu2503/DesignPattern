@@ -1,0 +1,123 @@
+import java.util.*;
+
+interface Observer {
+	public void update(double temp, double humidity, double pressure);
+}
+
+class StatisticsDisplay implements Observer {
+	double maxTemp = 0.0f;
+	double minTemp = 200;
+	double tempSum = 0.0f;
+	int numReadings;
+	WeatherData weatherData;
+	
+	public StatisticsDisplay(WeatherData weatherData) {
+		this.weatherData = weatherData;
+		weatherData.registerObserver(this);
+	}
+	
+	public void update(double temp, double humidity, double pressure) {
+		tempSum += temp;
+		numReadings++;
+		
+		if (temp > maxTemp) {
+			maxTemp = temp;
+		}
+		
+		if (temp < minTemp) {
+			minTemp = temp;
+		}
+		
+		display();
+	}
+	
+	public void display() {
+		System.out.println("Avg/Max/Min temperature = " + (tempSum / numReadings)
+				+ "/" + maxTemp + "/" + minTemp);
+	}
+	
+}
+
+class CurrentConditionDisplay implements Observer {
+	double temperature;
+	double humidity;
+	WeatherData weatherData;
+	
+	public CurrentConditionDisplay(WeatherData weatherData) {
+		this.weatherData = weatherData;
+		weatherData.registerObserver(this);
+	}
+	
+	public void update(double temperature, double humidity, double pressure) {
+		this.temperature = temperature;
+		this.humidity = humidity;
+		display();
+	}
+	
+	public void display() {
+		System.out.println("Current conditions : " + temperature +
+				"F degrees and " + humidity + "% humidity");
+	}
+	
+}
+
+interface Subject {
+	public void registerObserver(Observer o);
+	public void removeObserver(Observer o);
+	public void notifyObserver();
+}
+
+class WeatherData implements Subject {
+	ArrayList<Observer> observers;
+	double temperature;
+	double humidity;
+	double pressure;
+	
+	WeatherData() {
+		observers = new ArrayList<Observer>();
+	}
+	
+	public void registerObserver(Observer o) {
+		observers.add(o);
+	}
+	public void removeObserver(Observer o) {
+		int i = observers.indexOf(o);
+		if (i >= 0) {
+			observers.remove(i);
+		}
+	}
+	public void notifyObserver() {
+		for (Observer observer : observers) {
+			observer.update(temperature, humidity, pressure);
+		}
+	}
+	
+	void measurementsChanged() {
+		notifyObserver();
+	}
+	
+	void setMeasurements(double temperature, double humidity, double pressure) {
+		this.temperature = temperature;
+		this.humidity = humidity;
+		this.pressure = pressure;
+		
+		measurementsChanged();
+	}
+}
+
+public class WeatherStation {
+
+	public static void main(String[] args) {
+
+		WeatherData weatherData = new WeatherData();
+		CurrentConditionDisplay x = new CurrentConditionDisplay(weatherData);
+		StatisticsDisplay y = new StatisticsDisplay(weatherData);
+		//		weatherData.registerObserver(x);
+		
+		weatherData.setMeasurements(80,65,30.4f);
+		weatherData.setMeasurements(82,70,29.2f);
+		weatherData.setMeasurements(78,90,29.2f);
+
+	}
+
+}
