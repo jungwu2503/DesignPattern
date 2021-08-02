@@ -1,0 +1,118 @@
+abstract class Beverage {
+	String description = "제목없음";
+	String getDescription() {
+		return description;
+	}
+	
+	abstract double cost();
+}
+
+class Espresso extends Beverage {
+	Espresso() {
+		description = "에스프레소";
+	}
+	
+	double cost() {
+		return 1.99; 
+	}
+	
+}
+
+class DarkRoast extends Beverage {
+	DarkRoast() {
+		description = "다크로스트";
+	}
+	
+	double cost() {
+		return 0.99; 
+	}
+	
+}
+
+class HouseBlend extends Beverage {
+	HouseBlend() {
+		description = "하우스 블랜드";
+	}
+	
+	double cost() {
+		return 0.89; 
+	}
+	
+}
+
+abstract class CondimentDecorator extends Beverage {
+	abstract String getDescription();
+}
+
+class Mocha extends CondimentDecorator {
+	
+	Beverage beverage;
+	
+	Mocha(Beverage beverage) {
+		this.beverage = beverage;
+	}
+	
+	String getDescription() {
+		return beverage.getDescription() + ", 모카";
+	}
+	
+	double cost() {
+		return 0.2 + beverage.cost();
+	}
+}
+
+class Whip extends CondimentDecorator {
+	
+	Beverage beverage;
+	
+	Whip(Beverage beverage) {
+		this.beverage = beverage;
+	}
+	
+	String getDescription() {
+		return beverage.getDescription() + ", 휘핑 크림";
+	}
+	
+	double cost() {
+		return 0.1 + beverage.cost();
+	}
+}
+
+class Soy extends CondimentDecorator {
+	
+	Beverage beverage;
+	
+	Soy(Beverage beverage) {
+		this.beverage = beverage;
+	}
+	
+	String getDescription() {
+		return beverage.getDescription() + ", 두유";
+	}
+	
+	double cost() {
+		return 0.15 + beverage.cost();
+	}
+}
+
+public class StarbuzzCoffee {
+
+	public static void main(String[] args) {
+		Beverage beverage = new Espresso();
+		System.out.println(beverage.getDescription() + " $" + beverage.cost());
+		
+		Beverage beverage2 = new DarkRoast();
+		beverage2 = new Mocha(beverage2);
+		beverage2 = new Mocha(beverage2);
+		beverage2 = new Whip(beverage2);
+		System.out.println(beverage2.getDescription() + " $" + beverage2.cost());
+		
+		Beverage beverage3 = new Whip(new Mocha(new Soy(new HouseBlend())));
+/*		beverage3 = new Soy(beverage3);
+		beverage3 = new Mocha(beverage3);
+		beverage3 = new Whip(beverage3); */
+		System.out.println(beverage3.getDescription() + " $" + beverage3.cost());
+		
+	}
+
+}
