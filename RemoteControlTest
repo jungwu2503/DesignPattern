@@ -1,0 +1,87 @@
+// 디자인 원칙 어긋난 안좋은 코드
+class Light {
+	String location = "";
+	
+	public Light(String location) {
+		this.location = location;
+	}
+	
+	public void on() {
+		System.out.println(location + " light is on");
+	}
+	
+	public void off() {
+		System.out.println(location + " light is off");
+	}
+		
+}
+
+class TV {
+	
+	String location;
+	
+	public TV(String location) {
+		this.location = location;
+	}
+	
+	public void on() {
+		System.out.println("TV is on");
+	}
+	
+	public void off() {
+		System.out.println("TV is off");
+	}
+	
+}
+
+class SimpleRemoteControl {
+	Light l1;
+	Light l2;
+	TV tv;
+	
+	SimpleRemoteControl() {
+		l1 = new Light("Kitchen");
+		l2 = new Light("Living room");
+		tv = new TV("Living room");
+	}
+	
+	void onButtonWasPushed(int n) {
+		if (n == 0) {
+			l1.on();
+		} else if (n == 1) {
+			l2.on();
+		} else if (n == 2) {
+			tv.on();
+		}
+	}
+	
+	void offButtonWasPushed(int n) {
+		if (n == 0) {
+			l1.off();
+		} else if (n == 1) {
+			l2.off();
+		} else if (n == 2) {
+			tv.off();
+		}
+	}
+	
+}
+
+public class RemoteControlTest {
+
+	public static void main(String[] args) {
+
+		SimpleRemoteControl remote = new SimpleRemoteControl();
+		
+		remote.onButtonWasPushed(0);
+		remote.offButtonWasPushed(0);
+		remote.onButtonWasPushed(0);
+		remote.offButtonWasPushed(0);
+		remote.onButtonWasPushed(1);
+		remote.offButtonWasPushed(1);
+		remote.onButtonWasPushed(2);
+		remote.offButtonWasPushed(2);
+		
+	}
+
+}
