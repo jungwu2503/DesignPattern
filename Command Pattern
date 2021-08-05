@@ -1,0 +1,200 @@
+class Light {
+	String location = "";
+	
+	public Light(String location) {
+		this.location = location;
+	}
+	
+	public void on() {
+		System.out.println(location + " light is on");
+	}
+	
+	public void off() {
+		System.out.println(location + " light is off");
+	}
+		
+}
+
+class TV {
+	
+	String location;
+	
+	public TV(String location) {
+		this.location = location;
+	}
+	
+	public void on() {
+		System.out.println("TV is on");
+	}
+	
+	public void off() {
+		System.out.println("TV is off");
+	}
+	
+}
+
+interface Command {
+	public void execute();
+}
+
+class LightOnCommand implements Command {
+	
+	Light light;
+	
+	LightOnCommand(Light light) {
+		this.light = light;
+	}
+	
+	public void execute() {
+		light.on();
+	}
+	
+}
+
+class LightOffCommand implements Command {
+	
+	Light light;
+	
+	LightOffCommand(Light light) {
+		this.light = light;
+	}
+	
+	public void execute() {
+		light.off();
+	}
+	
+}
+
+class TVOnCommand implements Command {
+	TV tv;
+	
+	TVOnCommand(TV tv) {
+		this.tv = tv;
+	}
+	
+	public void execute() {
+		tv.on();
+	}
+	
+}
+
+class TVOffCommand implements Command {
+	TV tv;
+	
+	TVOffCommand(TV tv) {
+		this.tv = tv;
+	}
+	
+	public void execute() {
+		tv.off();
+	}
+	
+}
+
+class NoCommand implements Command {
+	public void execute() {
+		System.out.println("Not implemented yet");
+	}
+}
+
+class RemoteControl {
+	
+	Command[] onCommands;
+	Command[] offCommands;
+	
+	RemoteControl() {
+		onCommands = new Command[7];
+		offCommands = new Command[7];
+		Command noCommand = new NoCommand();
+		
+		for (int i = 0; i < 7; i++) {
+			onCommands[i] = noCommand;
+			offCommands[i] = noCommand;
+		}
+	}
+	
+	void setCommand(int slot, Command onCommand, Command offCommand) {
+		onCommands[slot] = onCommand;
+		offCommands[slot] = offCommand;
+	}
+	
+	void onButtonWasPushed(int slot) {
+		onCommands[slot].execute();
+	}
+	
+	void offButtonWasPushed(int slot) {
+		offCommands[slot].execute();
+	}
+	
+}
+
+/*
+class SimpleRemoteControl {
+	Light l1;
+	Light l2;
+	TV tv;
+	
+	SimpleRemoteControl() {
+		l1 = new Light("Kitchen");
+		l2 = new Light("Living room");
+		tv = new TV("Living room");
+	}
+	
+	void onButtonWasPushed(int n) {
+		if (n == 0) {
+			l1.on();
+		} else if (n == 1) {
+			l2.on();
+		} else if (n == 2) {
+			tv.on();
+		}
+	}
+	
+	void offButtonWasPushed(int n) {
+		if (n == 0) {
+			l1.off();
+		} else if (n == 1) {
+			l2.off();
+		} else if (n == 2) {
+			tv.off();
+		}
+	}
+	
+}*/
+
+public class RemoteControlTest {
+
+	public static void main(String[] args) {
+
+		//SimpleRemoteControl remote = new SimpleRemoteControl();
+		RemoteControl remote = new RemoteControl();
+		
+		Light livingRoomLight = new Light("Living Room");
+		Light kitchenLight = new Light("Kitchen");
+		TV tv = new TV("Living Room");
+		
+		LightOnCommand livingRoomLightOn = new LightOnCommand(livingRoomLight);
+		LightOffCommand livingRoomLightOff = new LightOffCommand(livingRoomLight);
+		
+		LightOnCommand kitchenLightOn = new LightOnCommand(kitchenLight);
+		LightOffCommand kitchenLightOff = new LightOffCommand(kitchenLight);
+		
+		TVOnCommand tvOn = new TVOnCommand(tv);
+		TVOffCommand tvOff = new TVOffCommand(tv);
+		
+		remote.setCommand(0, livingRoomLightOn, livingRoomLightOff);
+		remote.setCommand(1, kitchenLightOn, kitchenLightOff);
+		remote.setCommand(2, tvOn, tvOff);
+		
+		remote.onButtonWasPushed(0);
+		remote.offButtonWasPushed(0);
+		remote.onButtonWasPushed(1);
+		remote.offButtonWasPushed(1);
+		remote.onButtonWasPushed(2);
+		remote.offButtonWasPushed(2);
+
+		remote.offButtonWasPushed(4);
+		
+	}
+
+}
