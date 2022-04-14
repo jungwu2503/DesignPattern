@@ -1,0 +1,147 @@
+import java.util.*;
+
+interface Menu
+{
+    public Iterator createIterator();
+}
+
+class ArrayListIterator implements Iterator
+{
+    ArrayList<String> list;
+    int index;
+    ArrayListIterator(ArrayList<String> list) {
+	this.list = list;
+	index = 0;
+    }
+    public boolean hasNext(){
+	if (index < list.size())
+	{
+	    return true;
+	}
+	return false;
+    }
+    public String next(){
+	String obj = list.get(index);
+	index++;
+	return obj;
+    }
+}
+
+class ArrayIterator implements Iterator
+{
+    Object[] array;
+    int index;
+    ArrayIterator(Object[] array) {
+	this.array = array;
+	index = 0;
+    }
+    public boolean hasNext(){
+	if (index >= array.length) return false;
+	if (array[index] == null) return false;
+	return true;
+    }
+    public Object next(){
+	Object o = array[index];
+	index++;
+	return o;
+    }
+}
+
+class DinnerMenu implements Menu
+{
+    static int MAX = 10;
+    int n = 0;
+    String[] menuItems;
+
+    DinnerMenu() {
+	menuItems = new String[MAX];
+
+	menuItems[n++] = "짜장";
+	menuItems[n++] = "짬뽕";
+	menuItems[n++] = "우동";
+	menuItems[n++] = "라면";
+    }
+    public Iterator createIterator() {
+	return new ArrayIterator(menuItems);
+    }
+}
+
+class PancakeHouseMenu implements Menu
+{
+    ArrayList<String> menuItems;
+    PancakeHouseMenu() {
+	menuItems = new ArrayList<String>();
+
+	menuItems.add("AAA pancake");
+	menuItems.add("BBB pancake");
+	menuItems.add("CCC pancake");
+    }
+    public Iterator createIterator() {
+	return new ArrayListIterator(menuItems);
+    }
+}
+
+class CafeMenu implements Menu
+{
+    Hashtable<String,String> menuItems;
+
+    CafeMenu() {
+	menuItems = new Hashtable<String,String>();
+
+	menuItems.put("프라이","프라이");
+	menuItems.put("스프","스프");
+	menuItems.put("베리토","베리토");
+    }
+    public Iterator createIterator() {
+	return menuItems.values().iterator();
+    }
+}
+
+class Waitress
+{
+    ArrayList<Menu> menus;
+
+    Waitress(ArrayList<Menu> menus) {
+	this.menus = menus;
+    }
+
+    void printMenu() {
+	Iterator<Menu> i = menus.iterator();
+	while (i.hasNext())
+	{
+	    Menu m = i.next();
+	    printMenu(m.createIterator());
+	}
+    }
+
+    void printMenu(Iterator i) {
+	while (i.hasNext())
+	{
+	    Object s = i.next();
+	    System.out.println(s);
+	}
+    }
+}
+
+class IteratorTest
+{
+	public static void main(String[] args) 
+	{
+	    ArrayList<Menu> list = new ArrayList<Menu>();
+	    list.add(new DinnerMenu());
+	    list.add(new PancakeHouseMenu());
+	    list.add(new CafeMenu());
+
+	    Waitress w = new Waitress(list);
+
+	    w.printMenu();
+	    /*
+	    DinnerMenu menu1 = new DinnerMenu();
+	    PancakeHouseMenu menu2 = new PancakeHouseMenu();
+	    CafeMenu menu3 = new CafeMenu();
+
+	    printMenu(menu1);
+	    printMenu(menu2);	    
+	    printMenu(menu3); */
+	}
+}
